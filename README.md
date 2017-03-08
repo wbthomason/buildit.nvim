@@ -18,6 +18,11 @@ directory of a file you open. If it can't find one, then it asks you what to do 
 least). Then it runs the appropriate build command asynchronously, and reports and interesting 
 results.
 
+Notably, `buildit` does **not** change the working directory. This is so you can have things like 
+`fzf` easily search from the project root/wherever, but still build from the appropriate directory.
+
+More features might happen once I think of them/they are suggested.
+
 ## But why? Don't we already have Neomake and vim-dispatch and the like?
 
 We sure do, and they mostly work. However, I have a few problems with all of the solutions I've 
@@ -41,5 +46,4 @@ functionality isn't the worst thing in the world.
 # Footnotes
 
 <a name="whatsbuildable">**1:** A "buildable" directory is one that contains some file indicating 
-that a build tool is in place, e.g. `Makefile`, `Cargo.toml`, etc.[↩](#a1)
-</a>
+that a build tool is in place, e.g. `Makefile`, `Cargo.toml`, etc.[↩](#a1)</a>
