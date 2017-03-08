@@ -13,9 +13,10 @@ There will be instructions once there's something to use.
 
 ## What?
 
-buildit builds it. It finds the closest "buildable"^[1](#whatsbuildable) directory to the directory 
-of a file you open. If it can't find one, then it asks you what to do (by default, at least). Then 
-it runs the appropriate build command asynchronously, and reports and interesting results.
+`buildit` builds it. It finds the closest "buildable"^[1](#whatsbuildable)^ directory to the 
+directory of a file you open. If it can't find one, then it asks you what to do (by default, at 
+least). Then it runs the appropriate build command asynchronously, and reports and interesting 
+results.
 
 ## But why? Don't we already have Neomake and vim-dispatch and the like?
 
@@ -37,5 +38,7 @@ otherwise fail to do what I want.
 Also, I'm mostly writing this for fun/to try out writing plugins for Neovim. Thus, duplication of 
 functionality isn't the worst thing in the world.
 
-<a name="whatsbuildable">A "buildable" directory is one that contains some file indicating that a 
-build tool is in place, e.g. `Makefile`, `Cargo.toml`, etc.</a>
+# Footnotes
+
+<a name="whatsbuildable">**1: **A "buildable" directory is one that contains some file indicating 
+that a build tool is in place, e.g. `Makefile`, `Cargo.toml`, etc.</a>
