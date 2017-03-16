@@ -1,8 +1,12 @@
 '''BuildIt: A plugin for asynchronous project building from Neovim'''
 
-from builders import BUILDER_DEFS
-import neovim
 import os
+import re
+import shlex
+
+import neovim
+
+from builders import BUILDER_DEFS
 
 
 @neovim.plugin
@@ -12,16 +16,22 @@ class BuildIt(object):
     self.vim = vim
     self.builds = {}
     self.builders = self.load_builders()
+    self.known_paths = {}
 
   @neovim.command('BuildIt', range='', nargs='*', sync=True)
   def buildit(self, args, char_range):
     '''Handles the build-triggering command'''
-    pass
+    self.start_build(args)
 
   @neovim.function('build')
   def start_build(self, args):
     '''Starts a build'''
-    pass
+    current_buffer = self.vim.current.buffer
+    buf_path, fname = os.path.split(current_buffer.name)
+    builder_name, build_path = self.find_builder(buf_path, current_buffer.options['ft'])
+    builder = self.builders[builder_name]
+    ready_func = builder.get('func', None)
+    self.add_job(builder_name, build_path, fname, ready_func(build_path) if ready_func else True)
 
   @neovim.command('BuildItStatus', range='', nargs='*', sync=True)
   def buildit_status(self, args, char_range):
@@ -33,13 +43,75 @@ class BuildIt(object):
     '''Checks the status of a build'''
     pass
 
-  def find_builder(self, buf_dir):
+  def find_builder(self, buf_dir, filetype):
     '''Locates the correct builder for the given buffer'''
-    pass
+    prefixes = [(path, os.path.commonprefix([path, buf_dir])) for path in self.known_paths]
+    # Options for builders are the builders associated with any path that is a prefix for
+    # the current path
+    options = [path for path, prefix in prefixes if path == prefix]
+    if options:
+      # Pick the most specific option that works with the current filetype.
+      options = sorted(options, key=len, reverse=True)
+      for option in options:
+        builder_names = self.known_paths[option]
+        builder_names = [name for name in builder_names if check_ft(self.builders[name], filetype)]
+        if builder_names:
+          builder_name = self.ft_or_generic(builder_names, filetype)
+          return builder_name, option
+
+    # If we didn't find anything that works, already, it's time to search upward.
+    search_dir = buf_dir[:]
+    builder_name = None
+    while search_dir != '/':
+      files = '    '.join(os.listdir(search_dir))
+      options = [name for name in self.builders if self.builders[name]['sig'].search(files)]
+      options = [name for name in options if check_ft(self.builders[name], filetype)]
+      # If there's nothing matching the files and filetype, move up a directory
+      if not options:
+        search_dir = os.path.dirname(search_dir)
+        continue
+
+      # Prefer a more specific builder, i.e. one with a matching filetype
+      builder_name = self.ft_or_generic(options, filetype)
+      break
+    return builder_name, search_dir
 
   def load_builders(self):
     '''Search the relevant variable and a pre-configured list for builder templates'''
     known_builders = dict(BUILDER_DEFS)
     custom_builders = self.vim.vars.get('buildit_builders', {})
     known_builders.update(custom_builders)
+    for name in known_builders:
+      known_builders[name]['sig'] = re.compile(known_builders[name]['sig'])
     return known_builders
+
+  def add_job(self, builder_name, build_path, fname, ready):
+    '''Adds a job in the correct state to the current set of builds'''
+    key = (build_path, builder_name)
+    if key in self.builds:
+     return
+
+   proc = None
+   if ready:
+     proc = Popen
+
+    build = {
+        'builder': builder_name,
+        'buffer': fname,
+        'failed': not ready,
+        'proc': proc
+    }
+
+    self.builds[key] = build
+
+  def ft_or_generic(self, options, filetype):
+    '''Selects the ft-matching builder option if one exists, and return the first generic option if
+    no ft-match exists.'''
+    ft_options = [name for name in options if self.builders[name].get('ft', None) == filetype]
+    return ft_options[0] if ft_options else options[0]
+
+
+def check_ft(builder, filetype):
+  '''Filter function to remove builders that require a certain filetype other than the filetype of
+  the current buffer.'''
+  return builder.get('ft', None) == filetype if builder.get('ft', None) else True
