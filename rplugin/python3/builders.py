@@ -27,19 +27,21 @@ def oasis_check_build_files(oasis_dir):
   return True
 
 
-# TODO: More builders?
+# TODO: More builders!
 BUILDER_DEFS = {
   # make
   'make': {'sig': 'Makefile', 'cmd': 'make', 'func': None, 'ft': None},
+  # TODO: Have to figure out how to tell this to execute in the build directory
   # cmake
-  'cmake': {'sig': 'CMakeLists.txt', 'cmd': 'make', 'func': cmake_check_build_dir, 'ft': None},
+  'cmake': {'sig': 'CMakeLists\.txt', 'cmd': 'make', 'func': cmake_check_build_dir, 'ft': None},
   # cargo
-  'cargo': {'sig': 'Cargo.toml|Cargo.lock', 'cmd': 'cargo build', 'func': None, 'ft': 'rust'},
+  'cargo': {'sig': 'Cargo\.toml|Cargo\.lock', 'cmd': 'cargo build', 'func': None, 'ft': 'rust'},
   # go build
-  # TODO: I'm not sure if we want go build or go install...
+  # TODO: I'm not sure if we want go build or go install... This also seems like a dumb thing,
+  # having a signature that will match *every* directory. Maybe there's a better option?
   'go build': {'sig': '', 'cmd': 'go build', 'func': None, 'ft': 'go'},
   # stack build
-  'stack': {'sig': 'stack.yaml', 'cmd': 'stack build', 'func': None, 'ft': 'haskell'},
+  'stack': {'sig': 'stack\.yaml', 'cmd': 'stack build', 'func': None, 'ft': 'haskell'},
   # oasis build
   'oasis': {'sig': '_oasis', 'cmd': 'make', 'func': oasis_check_build_files, 'ft': 'ocaml'}
 }
