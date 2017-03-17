@@ -41,6 +41,7 @@ class BuildIt(object):
     self.vim.command('botright vnew')
     self.vim.command('wincmd k')
     self.vim.command('vertical resize 40%')
+    self.vim.command('nnoremap <buffer> q :bd!<CR>')
     for status in statuses:
       self.vim.current.buffer.append(status)
     
