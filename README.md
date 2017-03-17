@@ -1,5 +1,7 @@
 [![Stories in Ready](https://badge.waffle.io/wbthomason/buildit.nvim.png?label=ready&title=Ready)](https://waffle.io/wbthomason/buildit.nvim)
 [![Github All Releases](https://img.shields.io/github/downloads/wbthomason/buildit.nvim/total.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Maintenance](https://img.shields.io/maintenance/yes/2017.svg)]()
 # buildit.nvim
 A better async project builder for Neovim
 
