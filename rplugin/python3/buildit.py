@@ -3,6 +3,7 @@
 import os
 import re
 import shlex
+from subprocess import Popen
 
 import neovim
 
@@ -89,11 +90,12 @@ class BuildIt(object):
     '''Adds a job in the correct state to the current set of builds'''
     key = (build_path, builder_name)
     if key in self.builds:
-     return
+      return
 
+    builder = self.builders[builder_name]
     proc = None
     if ready:
-      proc = Popen
+      proc = Popen(shlex.split(builder['cmd']), cwd=builder['subdir'])
 
     build = {
         'builder': builder_name,
