@@ -52,6 +52,19 @@ command is run.
 `buildit` from some other plugin or custom interface. All `:BuildIt` does is call `start_build`, so
 the behavior is as you'd expect.
 
+# Contributing
+
+Contributions are welcome! Please add an issue for any bugs you run into or features you would like.
+Please also feel free to submit a PR with bug fixes/documentation improvements/feature additions. 
+I'll do my best to review and respond promptly.
+
+# TODO
+
+- Better documentation (in progress)
+- More customizability (in progress)
+- More builders (in progress)
+- ???
+
 # FAQ
 
 ## What?
