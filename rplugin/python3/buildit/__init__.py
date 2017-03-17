@@ -44,10 +44,11 @@ class BuildIt(object):
     self.vim.command('nnoremap <buffer> q :bd!<CR>')
     for status in statuses:
       self.vim.current.buffer.append(status)
-    
+
     self.prune_builds()
 
   def prune_builds(self):
+    '''Remove builds which have failed or finished'''
     for build_key in self.builds:
       build = self.builds[build_key]
       pruned_builds = dict(self.builds)
@@ -134,7 +135,7 @@ def create_status(build):
   '''Builds a status string from a build'''
   buf_name = build['buffer']
   builder_name = build['builder']
-  returncode = build['proc'].poll()
+  returncode = build['proc'].poll() if build['proc'] else 1
   if build['failed'] or (returncode and returncode > 0):
     status = 'Failed\t✖'
   elif returncode == 0:
