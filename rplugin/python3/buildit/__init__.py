@@ -3,7 +3,7 @@
 import os
 import re
 import shlex
-from subprocess import Popen
+from subprocess import Popen, DEVNULL
 
 import neovim
 
@@ -107,7 +107,12 @@ class BuildIt(object):
     builder = self.builders[builder_name]
     proc = None
     if ready:
-      proc = Popen(shlex.split(builder['cmd']), cwd=builder['subdir'])
+      proc = Popen(
+          shlex.split(builder['cmd']),
+          cwd=builder['subdir'],
+          stdout=DEVNULL,
+          stderr=DEVNULL
+      )
 
     build = {
         'builder': builder_name,
