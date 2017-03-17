@@ -18,7 +18,7 @@ For more, see [the FAQ](#faq) or the [docs](docs/buildit.txt)
 
 Installation with [dein.vim](https://github.com/Shougo/dein.vim) has been tested to work:
 
-```vimscript
+```vim
  call dein#add('wbthomason/buildit.nvim')
 ```
 
