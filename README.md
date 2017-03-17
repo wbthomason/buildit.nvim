@@ -94,9 +94,9 @@ We sure do, and they mostly work. However, I have a few problems with all of the
 found (which I'm sure stem from my improper usage of the existing options, but oh well).
 
 First, some of them (Neomake) try to **do too much**. I have a nice async linting framework already;
-I don't want something that tries to do both linter running and compilation/test running (though I 
-do acknowledge the similarities between the tasks). I just want something that I can use to trigger 
-the right build tool in the right way for whatever buffer I'm currently in.
+I don't want something that tries to do both linter execution and compilation/test execution (though 
+I do acknowledge the similarities between the tasks). I just want something that I can use to 
+trigger the right build tool in the right way for whatever buffer I'm currently in.
 
 Second, these existing solutions all seem to fail when you deviate from the pattern of having the 
 build files at the top level. While this may be considered a bad practice in many cases, there are a
