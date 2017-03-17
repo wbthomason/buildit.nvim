@@ -37,12 +37,20 @@ class BuildIt(object):
   @neovim.command('BuildItStatus', range='', nargs='*', sync=True)
   def buildit_status(self, args, char_range):
     '''Gets the status of all running builds'''
-    pass
+    statuses = [create_status(build) for build in self.builds.values()]
+    self.vim.command('botright vsplit')
+    self.vim.command('wincmd k')
+    self.vim.command('resize 20%')
+    for status in statuses:
+      self.vim.current.buffer.append(status)
+    
+    self.prune_builds()
 
-  @neovim.function('build_status')
-  def check_build(self, args):
-    '''Checks the status of a build'''
-    pass
+  def prune_builds(self):
+    for build_key in self.builds:
+      build = self.builds[build_key]
+      if build['failed'] or build['proc'].returncode:
+        del self.builds[build_key]
 
   def find_builder(self, buf_dir, filetype):
     '''Locates the correct builder for the given buffer'''
@@ -117,3 +125,17 @@ def check_ft(builder, filetype):
   '''Filter function to remove builders that require a certain filetype other than the filetype of
   the current buffer.'''
   return builder.get('ft', None) == filetype if builder.get('ft', None) else True
+
+
+def create_status(build):
+  '''Builds a status string from a build'''
+  buf_name = build['buffer']
+  builder_name = build['builder']
+  returncode = build['proc'].poll()
+  if build['failed']:
+    status = 'Failed\t✖'
+  elif returncode == 0:
+    status = "Completed\t✔"
+  else:
+    status = "Running..."
+  return f'{buf_name} ({builder_name}: {status})\n\n'
