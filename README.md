@@ -52,6 +52,15 @@ command is run.
 `buildit` from some other plugin or custom interface. All `:BuildIt` does is call `start_build`, so
 the behavior is as you'd expect.
 
+# Customization
+
+Right now, there's not all that much you can change about the default behavior of `buildit` (though 
+this will change soon).
+
+You can, however, add your own builder definitions by modifying the `g:buildit_builders` variable. 
+Look at [the default builders](rplugin/python3/buildit/builders.py) for the necessary structure. Any
+builders you redefine in `g:buildit_builders` will override the default definitions.
+
 # Contributing
 
 Contributions are welcome! Please add an issue for any bugs you run into or features you would like.
