@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/wbthomason/buildit.nvim.png?label=ready&title=Ready)](https://waffle.io/wbthomason/buildit.nvim)
 # buildit.nvim
 A better async project builder for Neovim
 
