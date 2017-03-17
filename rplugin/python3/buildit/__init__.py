@@ -7,7 +7,7 @@ from subprocess import Popen
 
 import neovim
 
-from builders import BUILDER_DEFS
+from buildit.builders import BUILDER_DEFS
 
 
 @neovim.plugin
@@ -38,9 +38,9 @@ class BuildIt(object):
   def buildit_status(self, args, char_range):
     '''Gets the status of all running builds'''
     statuses = [create_status(build) for build in self.builds.values()]
-    self.vim.command('botright vsplit')
+    self.vim.command('botright vnew')
     self.vim.command('wincmd k')
-    self.vim.command('resize 20%')
+    self.vim.command('vertical resize 40%')
     for status in statuses:
       self.vim.current.buffer.append(status)
     
@@ -49,8 +49,10 @@ class BuildIt(object):
   def prune_builds(self):
     for build_key in self.builds:
       build = self.builds[build_key]
+      pruned_builds = dict(self.builds)
       if build['failed'] or build['proc'].returncode:
-        del self.builds[build_key]
+        del pruned_builds[build_key]
+      self.builds = pruned_builds
 
   def find_builder(self, buf_dir, filetype):
     '''Locates the correct builder for the given buffer'''
@@ -132,10 +134,10 @@ def create_status(build):
   buf_name = build['buffer']
   builder_name = build['builder']
   returncode = build['proc'].poll()
-  if build['failed']:
+  if build['failed'] or (returncode and returncode > 0):
     status = 'Failed\t✖'
   elif returncode == 0:
     status = "Completed\t✔"
   else:
     status = "Running..."
-  return f'{buf_name} ({builder_name}: {status})\n\n'
+  return f'{buf_name} ({builder_name}): {status}'
