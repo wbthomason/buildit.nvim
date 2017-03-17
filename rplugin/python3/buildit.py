@@ -91,9 +91,9 @@ class BuildIt(object):
     if key in self.builds:
      return
 
-   proc = None
-   if ready:
-     proc = Popen
+    proc = None
+    if ready:
+      proc = Popen
 
     build = {
         'builder': builder_name,
