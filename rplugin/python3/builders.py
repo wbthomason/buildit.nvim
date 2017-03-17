@@ -34,7 +34,7 @@ BUILDER_DEFS = {
     # cmake
     'cmake': {
         'sig': r'CMakeLists\.txt',
-        'cmd': 'make',
+        'cmd': 'cmake .. && make',
         'func': cmake_check_build_dir,
         'ft': None,
         'subdir': 'build'
