@@ -52,7 +52,7 @@ class BuildIt(object):
     for build_key in self.builds:
       build = self.builds[build_key]
       pruned_builds = dict(self.builds)
-      if build['failed'] or build['proc'].returncode:
+      if build['failed'] or build['proc'].returncode is not None:
         del pruned_builds[build_key]
       self.builds = pruned_builds
 
