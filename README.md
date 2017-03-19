@@ -50,8 +50,8 @@ command is run.
 
 ## Triggering builds from other contexts
 
-`buildit` also provides the `start_build` function, in case you'd like to trigger a build using
-`buildit` from some other plugin or custom interface. All `:BuildIt` does is call `start_build`, so
+`buildit` also provides the `build` function, in case you'd like to trigger a build using
+`buildit` from some other plugin or custom interface. All `:BuildIt` does is call `build`, so
 the behavior is as you'd expect.
 
 # Customization

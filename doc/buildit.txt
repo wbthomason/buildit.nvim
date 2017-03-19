@@ -53,7 +53,7 @@ Functions                                                      *buildit-function
 
 buildit provides the following functions for starting builds:
 
-start_build
+build
   Does the work of the BuildIt command
 
 ===============================================================================
