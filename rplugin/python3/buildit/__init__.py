@@ -4,7 +4,6 @@ import os
 import re
 import shlex
 from subprocess import Popen, DEVNULL
-from tempfile import TemporaryFile
 
 import neovim
 
@@ -54,12 +53,6 @@ class BuildIt(object):
       build = self.builds[build_key]
       pruned_builds = dict(self.builds)
       if build['failed'] or build['proc'].returncode is not None:
-        if build['outfile'] != DEVNULL:
-          build['outfile'].close()
-        
-        if build['errfile'] != DEVNULL:
-          build['errfile'].close()
-
         del pruned_builds[build_key]
       self.builds = pruned_builds
 
@@ -107,7 +100,6 @@ class BuildIt(object):
 
   def add_job(self, builder_name, build_path, fname, ready):
     '''Adds a job in the correct state to the current set of builds'''
-    self.vim.command(f'echom "{builder_name} {build_path} {fname} {ready}"')
     key = (build_path, builder_name)
     if key in self.builds:
       self.vim.command('echom "Well, this is weird"')
@@ -117,26 +109,20 @@ class BuildIt(object):
 
     builder = self.builders[builder_name]
     proc = None
-    outfile = DEVNULL
-    errfile = DEVNULL
     if ready:
-      outfile = TemporaryFile()
-      errfile = TemporaryFile()
       execution_dir = os.path.join(build_path, builder['subdir'] if builder['subdir'] else '')
       proc = Popen(
           shlex.split(builder['cmd']),
           cwd=execution_dir,
-          stdout=outfile,
-          stderr=errfile
+          stdout=DEVNULL,
+          stderr=DEVNULL
       )
 
     build = {
         'builder': builder_name,
         'buffer': fname,
         'failed': not ready,
-        'proc': proc,
-        'outfile': outfile,
-        'errfile': errfile
+        'proc': proc
     }
 
     self.builds[key] = build
@@ -165,17 +151,4 @@ def create_status(build):
     status = "Completed\t✔"
   else:
     status = "Running..."
-
-  if build['outfile'] != DEVNULL:
-    build['outfile'].seek(0)
-    output = build['outfile'].read()
-  else:
-    output = ""
-
-  if build['errfile'] != DEVNULL:
-    build['errfile'].seek(0)
-    error = build['errfile'].read()
-  else:
-    error = "Couldn't run!"
-
-  return f'{buf_name} ({builder_name}): {status} {output} {error}'
+  return f'{buf_name} ({builder_name}): {status}'
