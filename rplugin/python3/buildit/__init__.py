@@ -109,7 +109,8 @@ class BuildIt(object):
     builder = self.builders[builder_name]
     proc = None
     if ready:
-      execution_dir = os.path.join(build_path, builder['subdir'] if builder['subdir'] else '')
+      subdir = builder.get('subdir', None)
+      execution_dir = os.path.join(build_path, subdir if subdir else '')
       proc = Popen(
           shlex.split(builder['cmd']),
           cwd=execution_dir,
