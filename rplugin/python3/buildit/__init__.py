@@ -52,11 +52,15 @@ class BuildIt(object):
       self.vim.current.buffer.append(status)
 
     if self.config['pruneafter']:
-      self.prune_builds()
+      self.prune()
 
   @neovim.command('BuildItPrune', range='', nargs='*', sync=True)
+  def prune_builds(self, args, char_range):
+    '''Handles the build-pruning command'''
+    self.prune()
+
   @neovim.function('prune')
-  def prune_builds(self):
+  def prune(self):
     '''Remove builds which have failed or finished'''
     for build_key in self.builds:
       build = self.builds[build_key]
