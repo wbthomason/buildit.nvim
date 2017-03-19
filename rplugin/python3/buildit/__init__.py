@@ -110,6 +110,7 @@ class BuildIt(object):
     self.vim.command(f'echom "{builder_name} {build_path} {fname} {ready}"')
     key = (build_path, builder_name)
     if key in self.builds:
+      self.vim.command('echom "Well, this is weird"')
       build = self.builds[key]
       if not build['failed'] and build['proc'].poll() is None:
         return
@@ -121,9 +122,10 @@ class BuildIt(object):
     if ready:
       outfile = TemporaryFile()
       errfile = TemporaryFile()
+      execution_dir = os.path.join(build_path, builder['subdir'] if builder['subdir'] else '')
       proc = Popen(
           shlex.split(builder['cmd']),
-          cwd=builder['subdir'],
+          cwd=execution_dir,
           stdout=outfile,
           stderr=errfile
       )
