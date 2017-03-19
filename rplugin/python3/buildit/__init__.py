@@ -51,7 +51,6 @@ class BuildIt(object):
     for status in statuses:
       self.vim.current.buffer.append(status)
 
-    shouldprune = self.config['pruneafter']
     if self.config['pruneafter']:
       self.prune_builds()
 
