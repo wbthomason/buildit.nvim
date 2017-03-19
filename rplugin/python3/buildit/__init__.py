@@ -102,7 +102,6 @@ class BuildIt(object):
     '''Adds a job in the correct state to the current set of builds'''
     key = (build_path, builder_name)
     if key in self.builds:
-      self.vim.command('echom "Well, this is weird"')
       build = self.builds[key]
       if not build['failed'] and build['proc'].poll() is None:
         return
