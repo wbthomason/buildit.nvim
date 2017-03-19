@@ -18,6 +18,12 @@ class BuildIt(object):
     self.builds = {}
     self.builders = self.load_builders()
     self.known_paths = {}
+    self.config = {
+        'statusloc': vim.vars.get('buildit_status_location'),
+        'promptmult': vim.vars.get('buildit_prompt_multiple'),
+        'pruneafter': vim.vars.get('buildit_prune_after_status'),
+        'showout': vim.vars.get('buildit_show_output')
+    }
 
   @neovim.command('BuildIt', range='', nargs='*', sync=True)
   def buildit(self, args, char_range):
