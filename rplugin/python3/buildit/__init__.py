@@ -19,10 +19,10 @@ class BuildIt(object):
     self.builders = self.load_builders()
     self.known_paths = {}
     self.config = {
-        'statusloc': vim.vars.get('buildit_status_location'),
-        'promptmult': vim.vars.get('buildit_prompt_multiple'),
-        'pruneafter': vim.vars.get('buildit_prune_after_status'),
-        'showout': vim.vars.get('buildit_show_output')
+        'statusloc': vim.vars.get('buildit_status_location', 'right'),
+        'promptmult': vim.vars.get('buildit_prompt_multiple', False),
+        'pruneafter': vim.vars.get('buildit_prune_after_status', True),
+        'showout': vim.vars.get('buildit_show_output', False)
     }
 
   @neovim.command('BuildIt', range='', nargs='*', sync=True)
