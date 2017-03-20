@@ -20,9 +20,9 @@ class BuildIt(object):
     self.builders = self.load_builders()
     self.known_paths = {}
     self.config = {
-        'statusloc': 'right',
-        'promptmult': False,
-        'pruneafter': True
+        'statusloc': self.vim.vars.get('buildit_status_location', 'right'),
+        'promptmult': self.vim.vars.get('buildit_prompt_multiple', False),
+        'pruneafter': self.vim.vars.get('buildit_prune_after_status', True),
     }
 
   @neovim.command('BuildIt', sync=True)
