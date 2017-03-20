@@ -36,7 +36,7 @@ class BuildIt(object):
     '''Handles the build-triggering command'''
     self.start_build()
 
-  @neovim.function('Build')
+  @neovim.function('Build', sync=False)
   def start_build(self):
     '''Starts a build'''
     if self.config == {}:
@@ -82,7 +82,7 @@ class BuildIt(object):
     '''Handles the build-pruning command'''
     self.prune()
 
-  @neovim.function('Prune')
+  @neovim.function('Prune', sync=False)
   def prune(self):
     '''Remove builds which have failed or finished'''
     for build_key in self.builds:
