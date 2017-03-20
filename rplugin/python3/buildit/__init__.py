@@ -39,6 +39,8 @@ class BuildIt(object):
   @neovim.function('Build')
   def start_build(self):
     '''Starts a build'''
+    if self.config == {}:
+      self.config = self.load_config()
     current_buffer = self.vim.current.buffer
     buf_path, fname = os.path.split(current_buffer.name)
     builder_name, build_path = self.find_builder(buf_path, current_buffer.options['ft'])
@@ -49,6 +51,8 @@ class BuildIt(object):
   @neovim.command('BuildItStatus', sync=True)
   def buildit_status(self):
     '''Gets the status of all running builds'''
+    if self.config == {}:
+      self.config = self.load_config()
     statuses = [create_status(build) for build in self.builds.values()]
     location = self.config['statusloc']
     if location == 'right':
