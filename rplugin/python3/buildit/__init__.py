@@ -19,20 +19,28 @@ class BuildIt(object):
     self.builds = {}
     self.builders = self.load_builders()
     self.known_paths = {}
-    self.config = {
-        'statusloc': vim.vars.get('buildit_status_location', 'right'),
-        'promptmult': vim.vars.get('buildit_prompt_multiple', False),
-        'pruneafter': vim.vars.get('buildit_prune_after_status', True),
+    self.config = {}
+
+  def load_config(self):
+    '''Loads the plugin configuration'''
+    config = {
+        'statusloc': self.vim.vars.get('buildit_status_location', 'right'),
+        'promptmult': self.vim.vars.get('buildit_prompt_multiple', False),
+        'pruneafter': self.vim.vars.get('buildit_prune_after_status', True)
     }
 
-  @neovim.command('BuildIt', range='', nargs='*', sync=True)
-  def buildit(self, args, char_range):
-    '''Handles the build-triggering command'''
-    self.start_build(args)
+    return config
 
-  @neovim.function('Build')
-  def start_build(self, args):
+  @neovim.command('BuildIt', sync=True)
+  def buildit(self):
+    '''Handles the build-triggering command'''
+    self.start_build()
+
+  @neovim.function('Build', sync=False)
+  def start_build(self):
     '''Starts a build'''
+    if self.config == {}:
+      self.config = self.load_config()
     current_buffer = self.vim.current.buffer
     buf_path, fname = os.path.split(current_buffer.name)
     builder_name, build_path = self.find_builder(buf_path, current_buffer.options['ft'])
@@ -40,9 +48,11 @@ class BuildIt(object):
     ready_func = builder.get('func', None)
     self.add_job(builder_name, build_path, fname, ready_func(build_path) if ready_func else True)
 
-  @neovim.command('BuildItStatus', range='', nargs='*', sync=True)
-  def buildit_status(self, args, char_range):
+  @neovim.command('BuildItStatus', sync=True)
+  def buildit_status(self):
     '''Gets the status of all running builds'''
+    if self.config == {}:
+      self.config = self.load_config()
     statuses = [create_status(build) for build in self.builds.values()]
     location = self.config['statusloc']
     if location == 'right':
@@ -67,12 +77,12 @@ class BuildIt(object):
     if self.config['pruneafter']:
       self.prune()
 
-  @neovim.command('BuildItPrune', range='', nargs='*', sync=True)
-  def prune_builds(self, args, char_range):
+  @neovim.command('BuildItPrune', sync=True)
+  def prune_builds(self):
     '''Handles the build-pruning command'''
     self.prune()
 
-  @neovim.function('Prune')
+  @neovim.function('Prune', sync=False)
   def prune(self):
     '''Remove builds which have failed or finished'''
     for build_key in self.builds:
