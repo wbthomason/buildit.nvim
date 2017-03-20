@@ -56,12 +56,27 @@ the behavior is as you'd expect.
 
 # Customization
 
-Right now, there's not all that much you can change about the default behavior of `buildit` (though 
-this will change soon).
+## Builder Definitions
 
-You can, however, add your own builder definitions by modifying the `g:buildit_builders` variable. 
-Look at [the default builders](rplugin/python3/buildit/builders.py) for the necessary structure. Any
+You can add your own builder definitions by modifying the `g:buildit_builders` variable. Look at 
+[the default builders](rplugin/python3/buildit/builders.py) for the necessary structure. Any
 builders you redefine in `g:buildit_builders` will override the default definitions.
+
+## Status Window Location
+
+To customize the location of the build status window, set `g:buildit_status_location`. Options are 
+"right" (the default), "left", "top", and "bottom".
+
+## Build Pruning
+
+If you don't like the default behavior of pruning completed builds after each status check, set 
+`g:buildit_prune_after_status` to `0`.
+
+## Builder Selection
+
+`buildit`'s default behavior when several builders could be a match for the current buffer is to 
+pick the first-defined matching builder. However, you can have it prompt you for your preferred 
+builder by setting `g:buildit_prompt_multiple` to `1`.
 
 # Contributing
 

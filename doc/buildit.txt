@@ -67,6 +67,19 @@ g:buildit_builders
     \  'yourbuild': {'sig': r'MyBuild.file', 'cmd': 'domybuild', 'func': preparemybuild, 'ft': filetypeformybuild, 'subdir': subdirectoryformybuild}
   \}
 
+g:buildit_status_location
+  Customize the location of the build status window, set `g:buildit_status_location`. Options are
+  "right" (the default), "left", "top", and "bottom".
+
+g:buildit_prune_after_status
+  If you don't like the default behavior of pruning completed builds after each status check, set 
+  `g:buildit_prune_after_status` to `0`.
+
+g:buildit_prompt_multiple
+  `buildit`'s default behavior when several builders could be a match for the current buffer is to 
+  pick the first-defined matching builder. However, you can have it prompt you for your preferred 
+  builder by setting `g:buildit_prompt_multiple` to `1`.
+
 ===============================================================================
 Credits                                                          *buildit-credits*
 
