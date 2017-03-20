@@ -15,7 +15,7 @@ What this boils down to is that you can very easily trigger builds for several s
 them work correctly without having to fiddle around with configuration, and keep editing
 uninterrupted.
 
-For more, see [the FAQ](#faq) or the [docs](docs/buildit.txt)
+For more, see [the FAQ](#faq) or the [docs](doc/buildit.txt)
 
 # Installation
 
