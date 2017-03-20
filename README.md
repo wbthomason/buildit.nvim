@@ -19,10 +19,10 @@ For more, see [the FAQ](#faq) or the [docs](doc/buildit.txt)
 
 # Installation
 
-Installation with [dein.vim](https://github.com/Shougo/dein.vim) has been tested to work:
+Installation with [Plug.vim](https://github.com/junegunn/vim-plug) has been tested to work:
 
 ```vim
- call dein#add('wbthomason/buildit.nvim')
+ Plug 'wbthomason/buildit.nvim'
 ```
 
 I have not tested it myself, but I assume that installation with most other methods will work as
