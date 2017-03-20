@@ -19,7 +19,7 @@ class BuildIt(object):
     self.builds = {}
     self.builders = self.load_builders()
     self.known_paths = {}
-    self.config = self.load_config()
+    self.config = {}
 
   def load_config(self):
     '''Loads the plugin configuration'''
