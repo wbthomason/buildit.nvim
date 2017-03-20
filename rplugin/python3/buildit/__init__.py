@@ -30,7 +30,7 @@ class BuildIt(object):
     '''Handles the build-triggering command'''
     self.start_build(args)
 
-  @neovim.function('build')
+  @neovim.function('Build')
   def start_build(self, args):
     '''Starts a build'''
     current_buffer = self.vim.current.buffer
@@ -59,7 +59,7 @@ class BuildIt(object):
     '''Handles the build-pruning command'''
     self.prune()
 
-  @neovim.function('prune')
+  @neovim.function('Prune')
   def prune(self):
     '''Remove builds which have failed or finished'''
     for build_key in self.builds:
