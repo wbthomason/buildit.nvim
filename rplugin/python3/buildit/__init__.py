@@ -20,18 +20,18 @@ class BuildIt(object):
     self.builders = self.load_builders()
     self.known_paths = {}
     self.config = {
-        'statusloc': vim.vars.get('buildit_status_location', 'right'),
-        'promptmult': vim.vars.get('buildit_prompt_multiple', False),
-        'pruneafter': vim.vars.get('buildit_prune_after_status', True),
+        'statusloc': 'right',
+        'promptmult': False,
+        'pruneafter': True
     }
 
-  @neovim.command('BuildIt', range='', nargs='*', sync=True)
-  def buildit(self, args, char_range):
+  @neovim.command('BuildIt', sync=True)
+  def buildit(self):
     '''Handles the build-triggering command'''
-    self.start_build(args)
+    self.start_build()
 
   @neovim.function('Build')
-  def start_build(self, args):
+  def start_build(self):
     '''Starts a build'''
     current_buffer = self.vim.current.buffer
     buf_path, fname = os.path.split(current_buffer.name)
@@ -40,8 +40,8 @@ class BuildIt(object):
     ready_func = builder.get('func', None)
     self.add_job(builder_name, build_path, fname, ready_func(build_path) if ready_func else True)
 
-  @neovim.command('BuildItStatus', range='', nargs='*', sync=True)
-  def buildit_status(self, args, char_range):
+  @neovim.command('BuildItStatus', sync=True)
+  def buildit_status(self):
     '''Gets the status of all running builds'''
     statuses = [create_status(build) for build in self.builds.values()]
     location = self.config['statusloc']
@@ -67,8 +67,8 @@ class BuildIt(object):
     if self.config['pruneafter']:
       self.prune()
 
-  @neovim.command('BuildItPrune', range='', nargs='*', sync=True)
-  def prune_builds(self, args, char_range):
+  @neovim.command('BuildItPrune', sync=True)
+  def prune_builds(self):
     '''Handles the build-pruning command'''
     self.prune()
 
