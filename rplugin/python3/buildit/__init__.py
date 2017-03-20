@@ -93,7 +93,11 @@ class BuildIt(object):
         builder_names = self.known_paths[option]
         builder_names = [name for name in builder_names if check_ft(self.builders[name], filetype)]
         if builder_names:
-          builder_name = self.ft_or_generic(builder_names, filetype)
+          builder_names = self.ft_or_generic(builder_names, filetype)
+          if self.config['promptmult']:
+            builder_name = self.prompt_for_preference(builder_names)
+          else:
+            builder_name = builder_names[0]
           return builder_name, option
 
     # If we didn't find anything that works, already, it's time to search upward.
@@ -109,9 +113,19 @@ class BuildIt(object):
         continue
 
       # Prefer a more specific builder, i.e. one with a matching filetype
-      builder_name = self.ft_or_generic(options, filetype)
+      builder_names = self.ft_or_generic(options, filetype)
+      if self.config['promptmult']:
+        builder_name = self.prompt_for_preference(builder_names)
+      else:
+        builder_name = builder_names[0]
       break
     return builder_name, search_dir
+
+  def prompt_for_preference(self, builder_names):
+    '''Asks the user which of the builder options they prefer'''
+    prompt = f'Enter the index of your preferred builder: {builder_names}: '
+    index = self.vim.funcs.input(prompt)
+    return builder_names[index]
 
   def load_builders(self):
     '''Search the relevant variable and a pre-configured list for builder templates'''
@@ -155,7 +169,7 @@ class BuildIt(object):
     '''Selects the ft-matching builder option if one exists, and return the first generic option if
     no ft-match exists.'''
     ft_options = [name for name in options if self.builders[name].get('ft', None) == filetype]
-    return ft_options[0] if ft_options else options[0]
+    return ft_options if ft_options else options
 
 
 def check_ft(builder, filetype):
