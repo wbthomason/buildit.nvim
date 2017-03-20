@@ -4,6 +4,7 @@ import os
 import re
 import shlex
 from subprocess import Popen, DEVNULL
+from tempfile import TemporaryFile
 
 import neovim
 
@@ -22,7 +23,6 @@ class BuildIt(object):
         'statusloc': vim.vars.get('buildit_status_location', 'right'),
         'promptmult': vim.vars.get('buildit_prompt_multiple', False),
         'pruneafter': vim.vars.get('buildit_prune_after_status', True),
-        'showout': vim.vars.get('buildit_show_output', False)
     }
 
   @neovim.command('BuildIt', range='', nargs='*', sync=True)
@@ -59,6 +59,8 @@ class BuildIt(object):
       self.vim.command('horizontal resize 40%')
 
     self.vim.command('nnoremap <buffer> q :bd!<CR>')
+    self.vim.current.line = "BuildIt Status"
+    self.vim.current.buffer.append('============================')
     for status in statuses:
       self.vim.current.buffer.append(status)
 
