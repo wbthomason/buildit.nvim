@@ -19,11 +19,17 @@ class BuildIt(object):
     self.builds = {}
     self.builders = self.load_builders()
     self.known_paths = {}
-    self.config = {
-        'statusloc': 'right',
-        'promptmult': False,
-        'pruneafter': True
+    self.config = self.load_config()
+
+  def load_config(self):
+    '''Loads the plugin configuration'''
+    config = {
+        'statusloc': self.vim.vars.get('buildit_status_location', 'right'),
+        'promptmult': self.vim.vars.get('buildit_prompt_multiple', False),
+        'pruneafter': self.vim.vars.get('buildit_prune_after_status', True)
     }
+
+    return config
 
   @neovim.command('BuildIt', sync=True)
   def buildit(self):
