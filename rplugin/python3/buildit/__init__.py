@@ -31,7 +31,7 @@ class BuildIt(object):
 
     return config
 
-  @neovim.command('BuildIt', sync=True)
+  @neovim.command('BuildIt', sync=False)
   def buildit(self):
     '''Handles the build-triggering command'''
     self.start_build()
@@ -48,7 +48,7 @@ class BuildIt(object):
     ready_func = builder.get('func', None)
     self.add_job(builder_name, build_path, fname, ready_func(build_path) if ready_func else True)
 
-  @neovim.command('BuildItStatus', sync=True)
+  @neovim.command('BuildItStatus', sync=False)
   def buildit_status(self):
     '''Gets the status of all running builds'''
     if self.config == {}:
@@ -77,7 +77,7 @@ class BuildIt(object):
     if self.config['pruneafter']:
       self.prune()
 
-  @neovim.command('BuildItPrune', sync=True)
+  @neovim.command('BuildItPrune', sync=False)
   def prune_builds(self):
     '''Handles the build-pruning command'''
     self.prune()
