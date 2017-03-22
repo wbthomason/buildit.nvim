@@ -31,12 +31,12 @@ def oasis_check_build_files(oasis_dir):
 BUILDER_DEFS = {
     # make
     'make': {
-      'sig': r'Makefile',
-      'cmd': 'make',
-      'func': None,
-      'ft': None,
-      'subdir': None,
-      'shell': False
+        'sig': r'Makefile',
+        'cmd': 'make',
+        'func': None,
+        'ft': None,
+        'subdir': None,
+        'shell': False
     },
     # cmake
     'cmake': {
@@ -60,12 +60,12 @@ BUILDER_DEFS = {
     # TODO: I'm not sure if we want go build or go install... This also seems like a dumb thing,
     # having a signature that will match *every* directory. Maybe there's a better option?
     'go build': {
-      'sig': r'',
-      'cmd': 'go build',
-      'func': None,
-      'ft': 'go',
-      'subdir': None,
-      'shell': False
+        'sig': r'',
+        'cmd': 'go build',
+        'func': None,
+        'ft': 'go',
+        'subdir': None,
+        'shell': False
     },
     # stack build
     'stack': {
