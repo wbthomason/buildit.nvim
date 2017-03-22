@@ -195,7 +195,9 @@ def create_status(build):
   buf_name = build['buffer']
   builder_name = build['builder']
   returncode = build['proc'].poll() if build['proc'] else 1
-  if build['failed'] or (returncode and returncode > 0):
+  if build['failed']:
+    status = "Couldn't start!\t⚠"
+  elif returncode and returncode > 0:
     status = 'Failed\t✖'
   elif returncode == 0:
     status = "Completed\t✔"
