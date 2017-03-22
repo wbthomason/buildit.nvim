@@ -89,6 +89,12 @@ class BuildIt(object):
       build = self.builds[build_key]
       pruned_builds = dict(self.builds)
       if build['failed'] or build['proc'].returncode is not None:
+        if build['out'] != DEVNULL:
+          build['out'].close()
+
+        if build['err'] != DEVNULL:
+          build['err'].close()
+
         del pruned_builds[build_key]
       self.builds = pruned_builds
 
@@ -161,18 +167,24 @@ class BuildIt(object):
     if ready:
       subdir = builder.get('subdir', None)
       execution_dir = os.path.join(build_path, subdir if subdir else '')
+      self.vim.command(f'echom "{execution_dir}"')
+      outfile = TemporaryFile()
+      errfile = TemporaryFile()
       proc = Popen(
           shlex.split(builder['cmd']),
           cwd=execution_dir,
-          stdout=DEVNULL,
-          stderr=DEVNULL
+          stdout=outfile,
+          stderr=errfile,
+          shell=builder['shell']
       )
 
     build = {
         'builder': builder_name,
         'buffer': fname,
         'failed': not ready,
-        'proc': proc
+        'proc': proc,
+        'out': outfile,
+        'err': errfile
     }
 
     self.builds[key] = build
@@ -198,9 +210,13 @@ def create_status(build):
   if build['failed']:
     status = "Couldn't start!\t⚠"
   elif returncode and returncode > 0:
-    status = 'Failed\t✖'
-  elif returncode == 0:
-    status = "Completed\t✔"
+    build['out'].seek(0)
+    out = str(build['out'].read(), 'utf-8')
+    build['err'].seek(0)
+    err = str(build['err'].read(), 'utf-8')
+    status = f'Failed\t✖\t{out}\t{err}'
+  elif returncode and returncode == 0:
+    status = f'Completed\t✔\t{out}\t{err}'
   else:
     status = "Running..."
   return f'{buf_name} ({builder_name}): {status}'
