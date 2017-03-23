@@ -30,14 +30,22 @@ def oasis_check_build_files(oasis_dir):
 # TODO: More builders!
 BUILDER_DEFS = {
     # make
-    'make': {'sig': r'Makefile', 'cmd': 'make', 'func': None, 'ft': None, 'subdir': None},
+    'make': {
+        'sig': r'Makefile',
+        'cmd': 'make',
+        'func': None,
+        'ft': None,
+        'subdir': None,
+        'shell': False
+    },
     # cmake
     'cmake': {
         'sig': r'CMakeLists\.txt',
         'cmd': 'cmake .. && make',
         'func': cmake_check_build_dir,
         'ft': None,
-        'subdir': 'build'
+        'subdir': 'build',
+        'shell': True
     },
     # cargo
     'cargo': {
@@ -45,19 +53,28 @@ BUILDER_DEFS = {
         'cmd': 'cargo build',
         'func': None,
         'ft': 'rust',
-        'subdir': None
+        'subdir': None,
+        'shell': False
     },
     # go build
     # TODO: I'm not sure if we want go build or go install... This also seems like a dumb thing,
     # having a signature that will match *every* directory. Maybe there's a better option?
-    'go build': {'sig': r'', 'cmd': 'go build', 'func': None, 'ft': 'go', 'subdir': None},
+    'go build': {
+        'sig': r'',
+        'cmd': 'go build',
+        'func': None,
+        'ft': 'go',
+        'subdir': None,
+        'shell': False
+    },
     # stack build
     'stack': {
         'sig': r'stack\.yaml',
         'cmd': 'stack build',
         'func': None,
         'ft': 'haskell',
-        'subdir': None
+        'subdir': None,
+        'shell': False
     },
     # oasis build
     'oasis': {
@@ -65,6 +82,7 @@ BUILDER_DEFS = {
         'cmd': 'make',
         'func': oasis_check_build_files,
         'ft': 'ocaml',
-        'subdir': None
+        'subdir': None,
+        'shell': False
     }
 }

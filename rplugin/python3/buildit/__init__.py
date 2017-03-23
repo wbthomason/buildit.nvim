@@ -31,7 +31,7 @@ class BuildIt(object):
 
     return config
 
-  @neovim.command('BuildIt', sync=True)
+  @neovim.command('BuildIt', sync=False)
   def buildit(self):
     '''Handles the build-triggering command'''
     self.start_build()
@@ -48,7 +48,7 @@ class BuildIt(object):
     ready_func = builder.get('func', None)
     self.add_job(builder_name, build_path, fname, ready_func(build_path) if ready_func else True)
 
-  @neovim.command('BuildItStatus', sync=True)
+  @neovim.command('BuildItStatus', sync=False)
   def buildit_status(self):
     '''Gets the status of all running builds'''
     if self.config == {}:
@@ -77,7 +77,7 @@ class BuildIt(object):
     if self.config['pruneafter']:
       self.prune()
 
-  @neovim.command('BuildItPrune', sync=True)
+  @neovim.command('BuildItPrune', sync=False)
   def prune_builds(self):
     '''Handles the build-pruning command'''
     self.prune()
@@ -85,10 +85,13 @@ class BuildIt(object):
   @neovim.function('Prune', sync=False)
   def prune(self):
     '''Remove builds which have failed or finished'''
+    pruned_builds = dict(self.builds)
     for build_key in self.builds:
       build = self.builds[build_key]
-      pruned_builds = dict(self.builds)
       if build['failed'] or build['proc'].returncode is not None:
+        if build['err'] != DEVNULL:
+          build['err'].close()
+
         del pruned_builds[build_key]
       self.builds = pruned_builds
 
@@ -161,18 +164,22 @@ class BuildIt(object):
     if ready:
       subdir = builder.get('subdir', None)
       execution_dir = os.path.join(build_path, subdir if subdir else '')
+      errfile = TemporaryFile()
+      cmd = builder['cmd'] if builder['shell'] else shlex.split(builder['cmd'])
       proc = Popen(
-          shlex.split(builder['cmd']),
+          cmd,
           cwd=execution_dir,
           stdout=DEVNULL,
-          stderr=DEVNULL
+          stderr=errfile,
+          shell=builder['shell']
       )
 
     build = {
         'builder': builder_name,
         'buffer': fname,
         'failed': not ready,
-        'proc': proc
+        'proc': proc,
+        'err': errfile
     }
 
     self.builds[key] = build
@@ -195,10 +202,14 @@ def create_status(build):
   buf_name = build['buffer']
   builder_name = build['builder']
   returncode = build['proc'].poll() if build['proc'] else 1
-  if build['failed'] or (returncode and returncode > 0):
-    status = 'Failed\t✖'
-  elif returncode == 0:
-    status = "Completed\t✔"
+  if build['failed']:
+    status = "Couldn't start!\t⚠"
+  elif returncode is not None and returncode > 0:
+    build['err'].seek(0)
+    err = build['err'].read()
+    status = f'Failed\t✖\tError:\t{err}'
+  elif returncode is not None and returncode == 0:
+    status = 'Completed\t✔'
   else:
-    status = "Running..."
+    status = f'Running...Return is {returncode}'
   return f'{buf_name} ({builder_name}): {status}'
