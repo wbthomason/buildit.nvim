@@ -54,7 +54,7 @@ BUILDER_DEFS = {
         'func': None,
         'ft': 'rust',
         'subdir': None,
-        'shell': True
+        'shell': False
     },
     # go build
     # TODO: I'm not sure if we want go build or go install... This also seems like a dumb thing,
