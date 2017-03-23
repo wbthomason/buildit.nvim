@@ -69,8 +69,11 @@ class BuildIt(object):
       self.vim.command('horizontal resize 40%')
 
     self.vim.command('nnoremap <buffer> q :bd!<CR>')
-    self.vim.current.line = "BuildIt Status"
-    self.vim.current.buffer.append('============================')
+    width = self.vim.current.window.width
+    self.vim.current.line = '============================'.center(width)
+    self.vim.current.buffer.append('|      BuildIt Status      |'.center(width))
+    self.vim.current.buffer.append('============================'.center(width))
+    self.vim.current.buffer.append('')
     for status in statuses:
       self.vim.current.buffer.append(status)
 
@@ -211,5 +214,5 @@ def create_status(build):
   elif returncode is not None and returncode == 0:
     status = 'Completed\t✔'
   else:
-    status = f'Running...Return is {returncode}'
+    status = 'Running...'
   return f'{buf_name} ({builder_name}): {status}'
