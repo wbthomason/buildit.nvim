@@ -165,8 +165,9 @@ class BuildIt(object):
       subdir = builder.get('subdir', None)
       execution_dir = os.path.join(build_path, subdir if subdir else '')
       errfile = TemporaryFile()
+      cmd = builder['cmd'] if builder['shell'] else shlex.split(builder['cmd'])
       proc = Popen(
-          shlex.split(builder['cmd']),
+          cmd,
           cwd=execution_dir,
           stdout=DEVNULL,
           stderr=errfile,
