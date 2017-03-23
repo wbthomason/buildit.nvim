@@ -204,14 +204,12 @@ def create_status(build):
   returncode = build['proc'].poll() if build['proc'] else 1
   if build['failed']:
     status = "Couldn't start!\t⚠"
-  elif returncode and returncode > 0:
-    build['out'].seek(0)
-    out = str(build['out'].read(), 'utf-8')
+  elif returncode is not None and returncode > 0:
     build['err'].seek(0)
-    err = str(build['err'].read(), 'utf-8')
-    status = f'Failed\t✖\t{out}\t{err}'
-  elif returncode and returncode == 0:
-    status = f'Completed\t✔\t{out}\t{err}'
+    err = build['err'].read()
+    status = f'Failed\t✖\tError:\t{err}'
+  elif returncode is not None and returncode == 0:
+    status = 'Completed\t✔'
   else:
-    status = "Running..."
+    status = f'Running...Return is {returncode}'
   return f'{buf_name} ({builder_name}): {status}'
