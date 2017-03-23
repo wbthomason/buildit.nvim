@@ -69,7 +69,9 @@ class BuildIt(object):
       self.vim.command('horizontal resize 40%')
 
     self.vim.command('nnoremap <buffer> q :bd!<CR>')
-    width = self.vim.current.window.width
+    # TODO: It is not clear why center() over-pads, but this stupid hack seems to fix it. Still,
+    # stupid hacks should be removed wherever possible.
+    width = self.vim.current.window.width - 4
     self.vim.current.line = '============================'.center(width)
     self.vim.current.buffer.append('|      BuildIt Status      |'.center(width))
     self.vim.current.buffer.append('============================'.center(width))
