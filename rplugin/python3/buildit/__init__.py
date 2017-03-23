@@ -57,16 +57,16 @@ class BuildIt(object):
     location = self.config['statusloc']
     if location == 'right':
       self.vim.command('botright vnew')
-      self.vim.command('vertical resize 40%')
+      self.vim.command('vertical resize 40')
     elif location == 'left':
       self.vim.command('topleft vnew')
-      self.vim.command('vertical resize 40%')
+      self.vim.command('vertical resize 40')
     elif location == 'bottom':
       self.vim.command('bot new')
-      self.vim.command('resize 40%')
+      self.vim.command('resize 20')
     elif location == 'top':
       self.vim.command('top new')
-      self.vim.command('resize 40%')
+      self.vim.command('resize 20')
 
     self.vim.command('nnoremap <buffer> q :bd!<CR>')
     # TODO: It is not clear why center() over-pads, but this stupid hack seems to fix it. Still,
