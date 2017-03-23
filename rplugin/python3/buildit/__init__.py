@@ -76,8 +76,10 @@ class BuildIt(object):
     self.vim.current.buffer.append('|      BuildIt Status      |'.center(width))
     self.vim.current.buffer.append('============================'.center(width))
     self.vim.current.buffer.append('')
-    for status in statuses:
+    for status, error in statuses:
       self.vim.current.buffer.append(status)
+      if error:
+        self.vim.current.buffer.append(error)
 
     if self.config['pruneafter']:
       self.prune()
@@ -209,12 +211,17 @@ def create_status(build):
   returncode = build['proc'].poll() if build['proc'] else 1
   if build['failed']:
     status = "Couldn't start!\t⚠"
+    error = None
   elif returncode is not None and returncode > 0:
     build['err'].seek(0)
     err = build['err'].read()
-    status = f'Failed\t✖\tError:\t{err}'
+    status = 'Failed\t✖'
+    error = f'\tError:\t{err}'
   elif returncode is not None and returncode == 0:
     status = 'Completed\t✔'
+    error = None
   else:
     status = 'Running...'
-  return f'{buf_name} ({builder_name}): {status}'
+    error = None
+
+  return f'{buf_name} ({builder_name}): {status}', error
