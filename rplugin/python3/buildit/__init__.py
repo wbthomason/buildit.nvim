@@ -164,13 +164,11 @@ class BuildIt(object):
     if ready:
       subdir = builder.get('subdir', None)
       execution_dir = os.path.join(build_path, subdir if subdir else '')
-      self.vim.command(f'echom "{execution_dir}"')
-      outfile = TemporaryFile()
       errfile = TemporaryFile()
       proc = Popen(
           shlex.split(builder['cmd']),
           cwd=execution_dir,
-          stdout=outfile,
+          stdout=DEVNULL,
           stderr=errfile,
           shell=builder['shell']
       )
@@ -180,7 +178,6 @@ class BuildIt(object):
         'buffer': fname,
         'failed': not ready,
         'proc': proc,
-        'out': outfile,
         'err': errfile
     }
 
