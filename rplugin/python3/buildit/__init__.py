@@ -85,13 +85,10 @@ class BuildIt(object):
   @neovim.function('Prune', sync=False)
   def prune(self):
     '''Remove builds which have failed or finished'''
+    pruned_builds = dict(self.builds)
     for build_key in self.builds:
       build = self.builds[build_key]
-      pruned_builds = dict(self.builds)
       if build['failed'] or build['proc'].returncode is not None:
-        if build['out'] != DEVNULL:
-          build['out'].close()
-
         if build['err'] != DEVNULL:
           build['err'].close()
 
