@@ -44,9 +44,12 @@ class BuildIt(object):
     current_buffer = self.vim.current.buffer
     buf_path, fname = os.path.split(current_buffer.name)
     builder_name, build_path = self.find_builder(buf_path, current_buffer.options['ft'])
-    builder = self.builders[builder_name]
-    ready_func = builder.get('func', None)
-    self.add_job(builder_name, build_path, fname, ready_func(build_path) if ready_func else True)
+    if builder_name is None:
+      self.vim.command('echom "No builder found!"')
+    else:
+      builder = self.builders[builder_name]
+      ready_func = builder.get('func', None)
+      self.add_job(builder_name, build_path, fname, ready_func(build_path) if ready_func else True)
 
   @neovim.command('BuildItStatus', sync=False)
   def buildit_status(self):
