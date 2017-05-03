@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maintenance](https://img.shields.io/maintenance/yes/2017.svg)]()
 # buildit.nvim
-A better async project builder for Neovim. If you want a builder implemented, comment on https://github.com/wbthomason/buildit.nvim/issues/4 or submit a PR.
+A better async project builder for Neovim. If you want a builder implemented, comment on [the relevant issue](https://github.com/wbthomason/buildit.nvim/issues/4) or submit a PR.
 
 # Why would I use this?
 
