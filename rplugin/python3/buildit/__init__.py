@@ -3,12 +3,12 @@
 import os
 import re
 import shlex
-from subprocess import Popen, DEVNULL
+from subprocess import DEVNULL, Popen
 from tempfile import TemporaryFile
 
-import neovim
-
 from buildit.builders import BUILDER_DEFS
+
+import neovim
 
 
 @neovim.plugin
