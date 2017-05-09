@@ -3,13 +3,15 @@
 import os
 import re
 import shlex
+import sys
 from subprocess import DEVNULL, Popen
 from tempfile import TemporaryFile
 
+import neovim
+
+import asyncio
 from buildit.builders import BUILDER_DEFS
 from buildit.utils import check_ft, create_status
-
-import neovim
 
 
 @neovim.plugin
@@ -21,6 +23,12 @@ class BuildIt(object):
     self.builders = self.load_builders()
     self.known_paths = {}
     self.config = {}
+    if sys.platform == "win32":
+      loop = asyncio.ProactorEventLoop()
+      asyncio.set_event_loop(loop)
+    else:
+      loop = asyncio.get_event_loop()
+    self.loop = loop
 
   def load_config(self):
     '''Loads the plugin configuration'''
