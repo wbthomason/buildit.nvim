@@ -11,7 +11,7 @@ def create_status(build):
   '''Builds a status string from a build'''
   buf_name = build['buffer']
   builder_name = build['builder']
-  returncode = build['proc'].poll() if build['proc'] else 1
+  returncode = build['future'].result() if build['future'].done() else 1
   if build['failed']:
     status = "Couldn't start!\t⚠"
     error = None
