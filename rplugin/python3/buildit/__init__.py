@@ -182,7 +182,7 @@ class BuildIt(object):
         if error:
           echo_fmt = f'echohl Error | echom "{result}" | echohl Normal'
         else:
-          echo_fmt = f'echom "{result}"'
+          echo_fmt = f'echohl MoreMsg | echom "{result}" | echohl Normal'
         self.vim.command(echo_fmt, async=True)
 
       args = (cmd, execution_dir, builder['shell'])
