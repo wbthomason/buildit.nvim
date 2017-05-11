@@ -3,11 +3,9 @@
 import os
 import re
 import shlex
-from subprocess import DEVNULL, call
-from tempfile import TemporaryFile
 
 from buildit.builders import BUILDER_DEFS
-from buildit.utils import check_ft, create_status
+from buildit.utils import check_ft, create_status, run_build
 
 from concurrent.futures import ProcessPoolExecutor as Pool
 import neovim
@@ -102,9 +100,6 @@ class BuildIt(object):
     for build_key in self.builds:
       build = self.builds[build_key]
       if build['failed'] or build['future'].done():
-        if build['err'] != DEVNULL:
-          build['err'].close()
-
         del pruned_builds[build_key]
       self.builds = pruned_builds
 
@@ -177,7 +172,6 @@ class BuildIt(object):
     if ready:
       subdir = builder.get('subdir', None)
       execution_dir = os.path.join(build_path, subdir if subdir else '')
-      errfile = TemporaryFile()
       cmd = builder['cmd'] if builder['shell'] else shlex.split(builder['cmd'])
 
       def done_callback(future):
@@ -189,16 +183,11 @@ class BuildIt(object):
           echo_fmt = f'echohl Error | echom "{result}" | echohl Normal'
         else:
           echo_fmt = f'echom "{result}"'
-        self.vim.command(echo_fmt)
+        self.vim.command(echo_fmt, async=True)
 
-      future = self.pool.submit(
-          call,
-          cmd,
-          cwd=execution_dir,
-          stdout=DEVNULL,
-          stderr=errfile,
-          shell=builder['shell']
-      )
+      args = (cmd, execution_dir, builder['shell'])
+
+      future = self.pool.submit(run_build, args)
 
       future.key = key
       future.add_done_callback(done_callback)
@@ -208,7 +197,6 @@ class BuildIt(object):
         'buffer': fname,
         'failed': not ready,
         'future': future,
-        'err': errfile
     }
 
     self.builds[key] = build
