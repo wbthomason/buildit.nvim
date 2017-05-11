@@ -3,12 +3,11 @@
 import os
 import re
 import shlex
-from subprocess import DEVNULL, Popen
-from tempfile import TemporaryFile
 
 from buildit.builders import BUILDER_DEFS
-from buildit.utils import check_ft, create_status
+from buildit.utils import check_ft, create_status, run_build
 
+from concurrent.futures import ProcessPoolExecutor as Pool
 import neovim
 
 
@@ -21,6 +20,7 @@ class BuildIt(object):
     self.builders = self.load_builders()
     self.known_paths = {}
     self.config = {}
+    self.pool = Pool()
 
   def load_config(self):
     '''Loads the plugin configuration'''
@@ -99,10 +99,7 @@ class BuildIt(object):
     pruned_builds = dict(self.builds)
     for build_key in self.builds:
       build = self.builds[build_key]
-      if build['failed'] or build['proc'].returncode is not None:
-        if build['err'] != DEVNULL:
-          build['err'].close()
-
+      if build['failed'] or build['future'].done():
         del pruned_builds[build_key]
       self.builds = pruned_builds
 
@@ -167,30 +164,39 @@ class BuildIt(object):
     key = (build_path, builder_name)
     if key in self.builds:
       build = self.builds[key]
-      if not build['failed'] and build['proc'].poll() is None:
+      if not build['failed'] and not build['future'].done():
         return
 
     builder = self.builders[builder_name]
-    proc = None
+    future = None
     if ready:
       subdir = builder.get('subdir', None)
       execution_dir = os.path.join(build_path, subdir if subdir else '')
-      errfile = TemporaryFile()
       cmd = builder['cmd'] if builder['shell'] else shlex.split(builder['cmd'])
-      proc = Popen(
-          cmd,
-          cwd=execution_dir,
-          stdout=DEVNULL,
-          stderr=errfile,
-          shell=builder['shell']
-      )
+
+      def done_callback(future):
+        ''' Handle status display when the future ends '''
+        key = future.key
+        build = self.builds[key]
+        result, error = create_status(build)
+        if error:
+          echo_fmt = f'echohl Error | echom "{result}" | echohl Normal'
+        else:
+          echo_fmt = f'echom "{result}"'
+        self.vim.command(echo_fmt, async=True)
+
+      args = (cmd, execution_dir, builder['shell'])
+
+      future = self.pool.submit(run_build, args)
+
+      future.key = key
+      future.add_done_callback(done_callback)
 
     build = {
         'builder': builder_name,
         'buffer': fname,
         'failed': not ready,
-        'proc': proc,
-        'err': errfile
+        'future': future,
     }
 
     self.builds[key] = build
