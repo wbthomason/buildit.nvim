@@ -200,6 +200,8 @@ class BuildIt(object):
     }
 
     self.builds[key] = build
+    start_msg = f'{builder_name} started for {fname}...'
+    self.vim.command(f'echohl Question | echom "{start_msg}" | echohl Normal')
 
   def ft_or_generic(self, options, filetype):
     '''Selects the ft-matching builder option if one exists, and return the first generic option if
