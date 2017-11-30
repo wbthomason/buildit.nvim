@@ -7,7 +7,7 @@ from tempfile import TemporaryFile
 def check_ft(builder, filetype):
   '''Filter function to remove builders that require a certain filetype other than the filetype of
   the current buffer.'''
-  return builder.get('ft', None) == filetype if builder.get('ft', None) else True
+  return filetype in builder.get('ft', []) if builder.get('ft', None) else True
 
 
 def create_status(build):

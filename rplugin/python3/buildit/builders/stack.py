@@ -4,7 +4,7 @@ stack = {
     'sig': r'stack\.yaml',
     'cmd': 'stack build',
     'func': None,
-    'ft': 'haskell',
+    'ft': ['haskell'],
     'subdir': None,
     'shell': False
 }

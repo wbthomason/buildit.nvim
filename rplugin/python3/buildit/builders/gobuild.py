@@ -6,7 +6,7 @@ go_build = {
     'sig': r'',
     'cmd': 'go build',
     'func': None,
-    'ft': 'go',
+    'ft': ['go'],
     'subdir': None,
     'shell': False
 }

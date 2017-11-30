@@ -22,7 +22,7 @@ oasis = {
     'sig': r'_oasis',
     'cmd': 'make',
     'func': oasis_check_build_files,
-    'ft': 'ocaml',
+    'ft': ['ocaml'],
     'subdir': None,
     'shell': False
 }

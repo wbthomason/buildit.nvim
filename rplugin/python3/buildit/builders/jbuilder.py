@@ -5,7 +5,7 @@ jbuilder = {
     'sig': r'jbuild|_build',
     'cmd': 'jbuilder build',
     'func': None,
-    'ft': 'ocaml',
+    'ft': ['ocaml', 'jbuild'],
     'subdir': None,
     'shell': False
 }
