@@ -1,6 +1,6 @@
 ''' Builder definitions for Meson '''
 import os
-from subprocess import check_call, CalledProcessError
+from subprocess import check_call, DEVNULL, CalledProcessError
 
 
 def meson_init(meson_dir):
@@ -9,7 +9,7 @@ def meson_init(meson_dir):
     curr_dir = os.path.curdir
     try:
       os.chdir(meson_dir)
-      check_call(['meson', 'build'])
+      check_call(['meson', 'build'], stdout=DEVNULL, stderr=DEVNULL)
     except CalledProcessError:
       return False
     finally:
