@@ -5,7 +5,7 @@ import os
 def cmake_check_build_dir(cmakelist_dir):
   '''Makes the build directory if it does not already exist'''
   build_dir = os.path.join(cmakelist_dir, 'build')
-  if not os.path.isdir(os.path.join(cmakelist_dir, 'build')):
+  if not os.path.isdir(build_dir):
     os.mkdir(build_dir)
 
   return True
