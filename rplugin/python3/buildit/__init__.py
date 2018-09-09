@@ -14,6 +14,7 @@ import neovim
 @neovim.plugin
 class BuildIt(object):
   '''The main plugin class'''
+
   def __init__(self, vim):
     self.vim = vim
     self.builds = {}
@@ -183,7 +184,7 @@ class BuildIt(object):
           echo_fmt = f'echohl Error | echom "{result}" | echohl Normal'
         else:
           echo_fmt = f'echohl MoreMsg | echom "{result}" | echohl Normal'
-        self.vim.command(echo_fmt, async=True)
+        self.vim.command(echo_fmt, sync=False)
 
       args = (cmd, execution_dir, builder['shell'])
 
