@@ -1,6 +1,7 @@
 # buildit.nvim
 
-A better async project builder for Neovim. If you want a builder implemented, comment on [the relevant issue](https://github.com/wbthomason/buildit.nvim/issues/4) or submit a PR.
+An async project builder for Neovim.
+Compatible with (but not reliant on) VS Code-style `tasks.json` specifications.
 
 # Why would I use this?
 
