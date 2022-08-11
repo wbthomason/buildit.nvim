@@ -20,8 +20,9 @@ For more, see [the FAQ](#faq) or the [docs](doc/buildit.txt)
 Use your favorite plugin manager.
 
 With `packer.nvim`:
+
 ```lua
-use 'wbthomason/buildit.nvim'
+use {'wbthomason/buildit.nvim', requires = 'nvim-lua/plenary.nvim'}
 ```
 
 # Usage
