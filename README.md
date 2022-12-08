@@ -1,3 +1,6 @@
+# Archiving because I discovered https://github.com/stevearc/overseer.nvim, which seems to do this already.
+
+
 # buildit.nvim
 
 An async project builder for Neovim.
